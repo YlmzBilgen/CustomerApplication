@@ -1,0 +1,34 @@
+﻿@model CustomerViewModel
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container p-3 my-3 border">
+    <h1>Customer Details</h1>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.Surname)
+        </dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.Surname)
+        </dd>
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.CitizenshipNumber)
+        </dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.CitizenshipNumber)
+        </dd>
+    </dl>
+    <div>
+        <a class="btn btn-primary" asp-action="AddOrEdit" asp-route-employeeId="@Model.Id">Edit</a>
+        <a class="btn btn-danger" asp-action="Index">Back</a>
+    </div>
+</div>

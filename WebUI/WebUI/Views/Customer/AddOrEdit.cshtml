@@ -1,0 +1,107 @@
+﻿@model CustomerViewModel
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="~/css/site.css" rel="stylesheet" type="text/css" />
+<script src="~/jquery/jquery.min.js"></script>
+
+
+<script type="text/javascript">
+    $(function () {
+        $('#CityList').change(OnCityListSelectedChange);
+
+        var data = @Html.Raw(Json.Serialize(@Model));
+        var isEdit = '@ViewBag.IsEdit';
+
+        if (isEdit == 'True') {
+            $('#CityList').val(data.CityId).change();
+        }
+
+        function OnCityListSelectedChange() {
+            var id = $('#CityList').val();
+
+            $.ajax({
+                url: '/Customer/GetTowns',
+                data: { id: id },
+                type: "POST",
+                dataType: "Json",
+                success: function (response) {
+                    $('#TownList').empty();
+                    for (var i = 0; i < response.length; i++) {
+                        $('#TownList').append("<option value='" + response[i].Id + "'>" + response[i].TownName + "</option>");
+
+                        if (isEdit == 'True' && data != null && data.TownId == response[i].Id) {
+                            $('#TownList').val(data.TownId).change();
+                        }
+                    }
+                }
+            });
+        }
+
+    });
+</script>
+
+
+<div class="container p-3 my-3 border">
+    <h1> @ViewBag.PageName</h1>
+
+    <div class="row">
+        <div class="col-sm-6">
+            <hr />
+            <form asp-action="AddOrEdit">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                @if (@ViewBag.IsEdit)
+                {
+                    <input type="hidden" asp-for="Id" />
+                }
+                <div class="form-group">
+                    <label asp-for="Name" class="control-label">Adı</label>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Surname" class="control-label">Soyadı</label>
+                    <input asp-for="Surname" class="form-control" />
+                    <span asp-validation-for="Surname" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="CitizenshipNumber" class="control-label">Tc Kimlik</label>
+                    <input asp-for="CitizenshipNumber" class="form-control" />
+                    <span asp-validation-for="CitizenshipNumber" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="BirthDate" class="control-label">Doğum Tarihi</label>
+                    <input asp-for="BirthDate" class="form-control" />
+                    <span asp-validation-for="BirthDate" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="BirthPlace" class="control-label">Doğum Yeri</label>
+                    <input asp-for="BirthPlace" class="form-control" />
+                    <span asp-validation-for="BirthPlace" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Gender" class="control-label">Cinsiyet</label></br>
+                    @Html.DropDownList("Gender", ViewBag.Gender as List<SelectListItem>, new { @id = "Gender", @class = "form-control valid" })
+                </div>
+                <div class="form-group">
+                    <label class="control-label">İl</label>
+                    @Html.DropDownList("CityId", ViewBag.Cities as List<SelectListItem>, new { @id = "CityList", @class = "form-control valid" })
+                </div>
+                <div class="form-group">
+                    <label class="control-label">İlçe</label>
+                    @Html.DropDownList("TownId", ViewBag.Towns as List<SelectListItem>, new { @id = "TownList", @class = "form-control valid" })
+                </div>
+                <div class="form-group">
+                    <input class="btn btn-primary" type="submit" value="Save" />
+                    <a class="btn btn-danger" asp-action="Index">Back</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}
