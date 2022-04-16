@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -9,6 +10,12 @@ namespace WebUI.Models
 {
     public class CustomerViewModel
     {
+        public CustomerViewModel()
+        {
+            Cities = new List<SelectListItem>();
+            Towns = new List<SelectListItem>();
+            Genders = new List<SelectListItem>();
+        }
         public int Id { get; set; }
 
         public string RecordStatus { get; set; }
@@ -26,10 +33,16 @@ namespace WebUI.Models
         public int Age { get; set; }
 
         public string Gender { get; set; }
+        
+        [Display(Name="Şehir Seçiniz")]
         public int? CityId { get; set; }
         public int? TownId { get; set; }
         public string CityName { get; set; }
         public String TownName { get; set; }
+
+        public List<SelectListItem> Towns { get; set; }
+        public List<SelectListItem> Cities { get; set; }
+        public List<SelectListItem> Genders { get; set; }
     }
 
     public class CityViewModel

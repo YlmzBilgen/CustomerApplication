@@ -61,34 +61,38 @@ namespace WebUI.Controllers
         }
 
         //AddOrEdit Get Method
-        public IActionResult AddOrEdit(int? customerId)
+        public IActionResult Create()
         {
             var cities = _cityService.GetList().Data;
             var towns = _townService.GetList().Data.Where(x => x.CityId == cities[0].Id).ToList();
 
-            ViewBag.Cities = _mapper.Map<List<SelectListItem>>(cities);
-            ViewBag.Towns = _mapper.Map<List<SelectListItem>>(towns);
-            ViewBag.Gender = new List<SelectListItem>
+            CustomerViewModel model = new CustomerViewModel();
+            model.Cities = _mapper.Map<List<SelectListItem>>(cities);
+            model.Towns = _mapper.Map<List<SelectListItem>>(towns);
+            model.Genders = new List<SelectListItem>
             {
                 new SelectListItem { Value = "E", Text="Erkek"},
                 new SelectListItem { Value = "K", Text="Kadın"}
             };
 
-            ViewBag.PageName = customerId == null ? "Create Customer" : "Edit Customer";
-            ViewBag.IsEdit = customerId == null ? false : true;
-            if (customerId == null)
-            {
-                return View();
-            }
+            return View(model);
+        }
 
-            var customer = _customerService.GetById(Convert.ToInt32(customerId)).Data;
-            CustomerViewModel customerViewModel = _mapper.Map<CustomerViewModel>(customer);
+        public IActionResult Create(CustomerViewModel model)
+        {
+            var cities = _cityService.GetList().Data;
+            var towns = _townService.GetList().Data.Where(x => x.CityId == cities[0].Id).ToList();
 
-            if (customerViewModel == null)
+            CustomerViewModel model = new CustomerViewModel();
+            model.Cities = _mapper.Map<List<SelectListItem>>(cities);
+            model.Towns = _mapper.Map<List<SelectListItem>>(towns);
+            model.Genders = new List<SelectListItem>
             {
-                return NotFound();
-            }
-            return View(customerViewModel);
+                new SelectListItem { Value = "E", Text="Erkek"},
+                new SelectListItem { Value = "K", Text="Kadın"}
+            };
+
+            return View(model);
         }
 
         [HttpPost]
